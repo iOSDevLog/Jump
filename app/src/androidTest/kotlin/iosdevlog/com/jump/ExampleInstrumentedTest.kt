@@ -7,6 +7,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import org.junit.Assert.*
+import org.junit.BeforeClass
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -15,6 +16,14 @@ import org.junit.Assert.*
  */
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
+    companion object {
+        @BeforeClass
+        @JvmStatic
+        fun setup() {
+
+        }
+    }
+    
     @Test
     fun useAppContext() {
         // Context of the app under test.
