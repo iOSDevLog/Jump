@@ -1,4 +1,8 @@
 <resources>
-    <string name="app_name">Jump</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">跳一跳插件</string>
+    <string name="action_share">分享</string>>
+    <string name="services_on">辅助服务已开启</string>
+    <string name="services_off">辅助服务已关闭</string>
+    <string name="information">官方网站: http://iosdevlog.com\n源码:http://github.com/iOSDevLog/Jump</string>
+    <string name="ratio">系数</string>
 </resources>

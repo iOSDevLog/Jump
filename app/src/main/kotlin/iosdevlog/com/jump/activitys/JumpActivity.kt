@@ -1,43 +1,65 @@
 package iosdevlog.com.jump.activitys
 
 import android.Manifest
+import android.accessibilityservice.AccessibilityServiceInfo
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.annotation.NonNull
-import android.support.design.widget.Snackbar
+import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
+import android.view.accessibility.AccessibilityManager
+import android.widget.SeekBar
 import iosdevlog.com.jump.R
-
+import iosdevlog.com.jump.utils.Utils
 import kotlinx.android.synthetic.main.activity_jump.*
+import kotlinx.android.synthetic.main.fragment_jump.*
+
+/**
+ * Created iosdevlog on 2018/1/5.
+ */
 
 class JumpActivity : AppCompatActivity() {
     val REQUEST_WRITE_EXTNARL_PERMISSION = 100
+
+    private val mAccessibleIntent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_jump)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+        fab.setOnClickListener {
+            startActivity(mAccessibleIntent)
         }
+
+        seekBar.setOnSeekBarChangeListener(SeekBarListener())
     }
 
+
+    internal class SeekBarListener : SeekBar.OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+            Utils.resizedDistancePressTimeRatio = progress / 100.0
+        }
+
+
+        override fun onStartTrackingTouch(seekBar: SeekBar) {
+        }
+
+
+        override fun onStopTrackingTouch(seekBar: SeekBar) {
+        }
+    }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_jump, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
@@ -67,6 +89,32 @@ class JumpActivity : AppCompatActivity() {
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        updateServiceStatus()
+    }
+
+    private fun updateServiceStatus() {
+        var serviceEnabled = false
+
+        val accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+        val accessibilityServices = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC)
+        for (info in accessibilityServices) {
+            if (info.id == packageName + "/.AccessibilityServiceDemo") {
+                serviceEnabled = true
+            }
+        }
+
+        if (serviceEnabled) {
+            service_textview.setText(R.string.services_on)
+            fab.setImageResource(R.drawable.ic_stop_black_24dp)
+        } else {
+            service_textview.setText(R.string.services_off)
+            fab.setImageResource(R.drawable.ic_play_arrow_black_24dp)
         }
     }
 }
