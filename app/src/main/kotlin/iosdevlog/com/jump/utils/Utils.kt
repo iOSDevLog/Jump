@@ -9,8 +9,12 @@ import com.iosdevlog.jj.BoardCenterFinder.findBoardCenter
 import com.iosdevlog.jj.ChessCenterFinder.findStartCenter
 import com.iosdevlog.jj.ColorFilterFinder
 import iosdevlog.com.jump.entities.JumpColor
-import java.io.DataOutputStream
-import java.io.IOException
+import android.graphics.Bitmap.CompressFormat
+import android.graphics.Bitmap
+import android.util.Range
+import android.graphics.Bitmap.Config;
+import java.io.*
+
 
 /**
  * Created iosdevlog on 2018/1/4.
@@ -76,6 +80,19 @@ object Utils {
                     Log.e(TAG, "firstPoint = [x=" + firstPoint!!.x + ",y=" + firstPoint!!.y
                             + "] , secondPoint = [x=" + secondPoint!!.x + ",y=" + secondPoint!!.y + "]")
                     ColorFilterFinder.updateLastShapeMinMax(bitmap, firstPoint!!, secondPoint!!)
+
+                    val bitmapTem = Bitmap.createBitmap(bitmap.width, bitmap.height, Config.ARGB_8888);
+                    for (i in -5 until 5) {
+                        bitmapTem.setPixel(firstPoint!!.x + i, firstPoint!!.y, 0xff000000.toInt())
+                        bitmapTem.setPixel(secondPoint!!.x + i, secondPoint!!.y, 0xffffffff.toInt())
+                    }
+
+                    for (i in -5 until 5) {
+                        bitmapTem.setPixel(firstPoint!!.x, firstPoint!!.y + i, 0xffff0000.toInt())
+                        bitmapTem.setPixel(secondPoint!!.x, secondPoint!!.y + i, 0xff0000ff.toInt())
+                    }
+
+                    saveBitmapAsFile("a.png", bitmapTem)
                     distance = distance(firstPoint!!, secondPoint!!)
                     longPress((distance * resizedDistancePressTimeRatio).toInt())
                     sleep()
@@ -86,6 +103,26 @@ object Utils {
         }).start()
     }
 
+    fun saveBitmapAsFile(name: String, bitmap: Bitmap): Boolean {
+        val saveFile = File("/sdcard/Download/", name)
+
+        var saved = false
+        var os: FileOutputStream? = null
+        try {
+            Log.d("FileCache", "Saving File To Cache " + saveFile.getPath())
+            os = FileOutputStream(saveFile)
+            bitmap.compress(CompressFormat.PNG, 100, os)
+            os.flush()
+            os.close()
+            saved = true
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        return saved
+    }
     private fun sleep() {
         try {
             Thread.sleep(screenshotInterval.toLong())// wait for screencap

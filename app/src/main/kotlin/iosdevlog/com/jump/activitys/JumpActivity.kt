@@ -48,6 +48,7 @@ class JumpActivity : AppCompatActivity() {
 
 
         override fun onStartTrackingTouch(seekBar: SeekBar) {
+            Utils.screencap()
         }
 
 
@@ -104,7 +105,7 @@ class JumpActivity : AppCompatActivity() {
         val accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
         val accessibilityServices = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC)
         for (info in accessibilityServices) {
-            if (info.id == packageName + "/.AccessibilityServiceDemo") {
+            if (info.id == packageName + "/.JumpAccessibilityService") {
                 serviceEnabled = true
             }
         }

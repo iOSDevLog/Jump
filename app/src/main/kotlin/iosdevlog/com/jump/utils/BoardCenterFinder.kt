@@ -23,7 +23,7 @@ object BoardCenterFinder {
         val height = bitmap.height * 2 / 3
         var h = 200
         while (h < height && h < startCenterPoint.y) {
-            for (w in 0 until width) {
+            for (w in 50 until width) {
                 val color = bitmap.getPixel(w, h)
                 val newColor = Utils.intToJumpColor(color)
 
