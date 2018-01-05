@@ -1,12 +1,9 @@
----
-layout: post
-title: "Android 微信跳一跳插件"
-author: iosdevlog
-date: 2018-01-04 21:49:14 +0800
-description: ""
-category: android
-tags: [root]
----
+# Jump
+微信小游戏 跳一跳 Android 插件
+
+源码：<https://github.com/iOSDevLog/Jump> 现在还跳得不准。
+
+![screenshot](https://upload-images.jianshu.io/upload_images/910914-3bb86889546e700b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700)
 
 现在的微信跳一跳小游戏都是通过 PC 端破解的，于是我就写了一个只用 Android 手机就能破解的插件。
 
@@ -15,7 +12,7 @@ tags: [root]
 # 分析
 ---
 
-kotlin, Android Studio, Accessibility, adb
+kotlin, Android Studio, Accessibility, adb, root
 
 ## Accessibility 
 
@@ -132,6 +129,3 @@ fun adbCommand() {
 解决方法：
 
 > 在 *gradle.properties* 添加 `android.enableAapt2=false`
-
-
-
