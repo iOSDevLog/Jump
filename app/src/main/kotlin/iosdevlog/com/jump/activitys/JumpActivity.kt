@@ -48,7 +48,7 @@ class JumpActivity : AppCompatActivity() {
         override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
             val ratio = progress / 100.0
             Utils.resizedDistancePressTimeRatio = ratio
-            this@JumpActivity.service_textview.setText(ratio.toString())
+            this@JumpActivity.ratio_textview.text = ratio.toString()
         }
 
 
@@ -74,7 +74,7 @@ class JumpActivity : AppCompatActivity() {
 
     fun requestPermission() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            val hasWriteSdcardPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            val hasWriteSdcardPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             if (hasWriteSdcardPermission != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(
                         this,
