@@ -1,7 +1,11 @@
 # Jump
 微信小游戏 跳一跳 Android 插件
 
-源码：<https://github.com/iOSDevLog/Jump> 现在还跳得不准。
+视频：<https://weibo.com/tv/v/FD5JIDeTO?fid=1034:be8ac5577f9d183858300b1b18a0c782>
+
+现在的微信跳一跳小游戏都是通过 PC 端破解的，于是我就写了一个只用 Android 手机就能破解的插件。
+
+如果10秒还不跳，重新回到插件主页再回到跳一跳试试 。
 
 ![screenshot](https://upload-images.jianshu.io/upload_images/910914-3bb86889546e700b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700)
 
