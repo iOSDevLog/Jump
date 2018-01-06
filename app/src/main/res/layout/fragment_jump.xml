@@ -11,7 +11,7 @@
     <TextView
         android:id="@+id/service_textview"
         android:layout_width="384dp"
-        android:layout_height="111dp"
+        android:layout_height="50dp"
         android:text="@string/services_off"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -43,12 +43,13 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:max="500"
-        app:layout_constraintEnd_toStartOf="@+id/ratio_textView"
-        app:layout_constraintStart_toEndOf="@+id/textView3"
+        android:progress="137"
+        app:layout_constraintEnd_toStartOf="@+id/ratio_textview"
+        app:layout_constraintStart_toEndOf="@+id/k_textview"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/k_textview"
         android:layout_width="wrap_content"
         android:layout_height="18dp"
         android:layout_marginStart="8dp"
@@ -60,12 +61,12 @@
         android:layout_marginLeft="8dp" />
 
     <TextView
-        android:id="@+id/ratio_textView"
+        android:id="@+id/ratio_textview"
         android:layout_width="wrap_content"
         android:layout_height="18dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="32dp"
-        android:text="1"
+        android:text="@string/default_ratio"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

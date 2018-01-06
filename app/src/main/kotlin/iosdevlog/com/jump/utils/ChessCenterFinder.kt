@@ -90,8 +90,8 @@ object ChessCenterFinder {
     fun findStartCenter(bitmap: Bitmap): Point {
         val width = bitmap.width
         val height = bitmap.height
-        var centerX = 0
-        var centerY = 0
+        val centerX: Int
+        val centerY: Int
         for (h in 0 until height)
             for (w in 0 until width) {
                 val color = bitmap.getPixel(w, h)
@@ -123,6 +123,4 @@ object ChessCenterFinder {
         }
         return true
     }
-
-
 }

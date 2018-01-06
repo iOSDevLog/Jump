@@ -5,4 +5,5 @@
     android:accessibilityFlags="flagDefault"
     android:canRetrieveWindowContent="true"
     android:notificationTimeout="100"
+    android:description="@string/plugin_description"
     android:packageNames="com.tencent.mm" />

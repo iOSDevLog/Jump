@@ -14,6 +14,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.accessibility.AccessibilityManager
 import android.widget.SeekBar
+import com.iosdevlog.jj.ColorFilterFinder
 import iosdevlog.com.jump.R
 import iosdevlog.com.jump.utils.Utils
 import kotlinx.android.synthetic.main.activity_jump.*
@@ -37,24 +38,28 @@ class JumpActivity : AppCompatActivity() {
             startActivity(mAccessibleIntent)
         }
 
+        seekBar.progress = (Utils.resizedDistancePressTimeRatio*100).toInt()
         seekBar.setOnSeekBarChangeListener(SeekBarListener())
+        requestPermission()
     }
 
 
-    internal class SeekBarListener : SeekBar.OnSeekBarChangeListener {
+    inner class SeekBarListener : SeekBar.OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-            Utils.resizedDistancePressTimeRatio = progress / 100.0
+            val ratio = progress / 100.0
+            Utils.resizedDistancePressTimeRatio = ratio
+            this@JumpActivity.service_textview.setText(ratio.toString())
         }
 
 
         override fun onStartTrackingTouch(seekBar: SeekBar) {
-            Utils.screencap()
         }
 
 
         override fun onStopTrackingTouch(seekBar: SeekBar) {
         }
     }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_jump, menu)
         return true
@@ -105,7 +110,7 @@ class JumpActivity : AppCompatActivity() {
         val accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
         val accessibilityServices = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC)
         for (info in accessibilityServices) {
-            if (info.id == packageName + "/.JumpAccessibilityService") {
+            if (info.id == packageName + "/.services.JumpAccessibilityService") {
                 serviceEnabled = true
             }
         }

@@ -13,6 +13,7 @@ import android.graphics.Bitmap.CompressFormat
 import android.graphics.Bitmap
 import android.util.Range
 import android.graphics.Bitmap.Config;
+import android.os.Environment
 import java.io.*
 
 
@@ -28,18 +29,19 @@ object Utils {
     private var runtime: Runtime = Runtime.getRuntime()
     private var process: Process? = null
 
-    var firstPoint: Point? = Point(0, 0)
-    var secondPoint: Point? = Point(0, 0)
+    private var firstPoint: Point? = Point(0, 0)
+    private var secondPoint: Point? = Point(0, 0)
 
     // 间隔 3000ms
-    var screenshotInterval = 3000
-    var screenshotPath = SCREENSHOT_LOCATION
+    private var screenshotInterval = 3000
+    private var screenshotPath = SCREENSHOT_LOCATION
     // 系数 k
     var resizedDistancePressTimeRatio = 1.37
 
     private val TAG = this.javaClass.simpleName
     private val WECHAT_JUMP_UI = "com.tencent.mm/.plugin.appbrand.ui.AppBrandUI"
 
+    // 开始工作了，进入跳一跳界面运行，否则没有动作
     fun doWork(currentActivityName: String) {
         if (currentActivityName == WECHAT_JUMP_UI) {
             isJump = true
@@ -49,6 +51,7 @@ object Utils {
         }
     }
 
+    // 新开线程玩游戏，截图
     private fun playGame() {
         Thread(Runnable {
             Looper.prepare()
@@ -56,58 +59,51 @@ object Utils {
             while (isJump) {
                 screencap()
 
-                try {
-                    val bitmap = BitmapFactory.decodeFile(screenshotPath)
-                    firstPoint = findStartCenter(bitmap)
-                    secondPoint = findBoardCenter(bitmap, firstPoint!!)
-
-                    var distance = if (secondPoint == null) 0 else distance(firstPoint!!, secondPoint!!)
-                    if (secondPoint == null
-                            || secondPoint!!.x == 0
-                            || distance < 75
-                            ||  Math.abs(secondPoint!!.x - firstPoint!!.x) < 38) {
-                        secondPoint = ColorFilterFinder.findEndCenter(bitmap, firstPoint!!)
-                        if (secondPoint == null) {
-                            screencap()
-                            continue
-                        }
-                    } else {
-                        val colorfilterCenter = ColorFilterFinder.findEndCenter(bitmap, firstPoint!!)
-                        if (Math.abs(secondPoint!!.x - colorfilterCenter!!.x) > 20) {
-                            secondPoint = colorfilterCenter
-                        }
-                    }
-                    Log.e(TAG, "firstPoint = [x=" + firstPoint!!.x + ",y=" + firstPoint!!.y
-                            + "] , secondPoint = [x=" + secondPoint!!.x + ",y=" + secondPoint!!.y + "]")
-                    ColorFilterFinder.updateLastShapeMinMax(bitmap, firstPoint!!, secondPoint!!)
-
-                    val bitmapTem = Bitmap.createBitmap(bitmap.width, bitmap.height, Config.ARGB_8888);
-                    for (i in -5 until 5) {
-                        bitmapTem.setPixel(firstPoint!!.x + i, firstPoint!!.y, 0xff000000.toInt())
-                        bitmapTem.setPixel(secondPoint!!.x + i, secondPoint!!.y, 0xffffffff.toInt())
-                    }
-
-                    for (i in -5 until 5) {
-                        bitmapTem.setPixel(firstPoint!!.x, firstPoint!!.y + i, 0xffff0000.toInt())
-                        bitmapTem.setPixel(secondPoint!!.x, secondPoint!!.y + i, 0xff0000ff.toInt())
-                    }
-
-                    saveBitmapAsFile("a.png", bitmapTem)
-                    distance = distance(firstPoint!!, secondPoint!!)
-                    longPress((distance * resizedDistancePressTimeRatio).toInt())
-                    sleep()
-                } catch (e1: IOException) {
-                    e1.printStackTrace()
+                val bitmap = BitmapFactory.decodeFile(screenshotPath)
+                if (bitmap != null) {
+                    jump(bitmap)
                 }
             }
         }).start()
     }
 
+    // 分析棋子起跳点 和 落脚点
+    private fun jump(bitmap: Bitmap) {
+        try {
+            firstPoint = findStartCenter(bitmap)
+            secondPoint = findBoardCenter(bitmap, firstPoint!!)
+
+            var distance = if (secondPoint == null) 0 else distance(firstPoint!!, secondPoint!!)
+            if (secondPoint == null
+                    || secondPoint!!.x == 0
+                    || distance < 75
+                    || Math.abs(secondPoint!!.x - firstPoint!!.x) < 38) {
+                secondPoint = ColorFilterFinder.findEndCenter(bitmap, firstPoint!!)
+                if (secondPoint == null) {
+                    screencap()
+                    return
+                }
+            } else {
+                val colorfilterCenter = ColorFilterFinder.findEndCenter(bitmap, firstPoint!!)
+                if (Math.abs(secondPoint!!.x - colorfilterCenter!!.x) > 20) {
+                    secondPoint = colorfilterCenter
+                }
+            }
+
+            ColorFilterFinder.updateLastShapeMinMax(bitmap, firstPoint!!, secondPoint!!)
+            distance = distance(firstPoint!!, secondPoint!!)
+            longPress((distance * resizedDistancePressTimeRatio).toInt())
+        } catch (e1: IOException) {
+            e1.printStackTrace()
+        }
+        sleep()
+    }
+
     fun saveBitmapAsFile(name: String, bitmap: Bitmap): Boolean {
-        val saveFile = File("/sdcard/Download/", name)
+        val saveFile = File(Environment.DIRECTORY_DOWNLOADS, name)
 
         var saved = false
-        var os: FileOutputStream? = null
+        val os: FileOutputStream?
         try {
             Log.d("FileCache", "Saving File To Cache " + saveFile.getPath())
             os = FileOutputStream(saveFile)
@@ -123,9 +119,11 @@ object Utils {
 
         return saved
     }
+
+    // wait for screencap
     private fun sleep() {
         try {
-            Thread.sleep(screenshotInterval.toLong())// wait for screencap
+            Thread.sleep(screenshotInterval.toLong())
         } catch (e1: InterruptedException) {
             e1.printStackTrace()
         }
@@ -159,7 +157,7 @@ object Utils {
     }
 
     fun screencap() {
-        val cmd = arrayOf("screencap -p " + SCREENSHOT_LOCATION)
+        val cmd = arrayOf("screencap -p " + screenshotPath)
         adbCommand(cmd)
     }
 

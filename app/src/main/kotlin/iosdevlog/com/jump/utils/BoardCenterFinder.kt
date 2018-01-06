@@ -10,11 +10,11 @@ import iosdevlog.com.jump.utils.Utils
 // 找白点,也就是连跳的中心点
 object BoardCenterFinder {
     //设定中心点的颜色
-    internal val red = 0xfa
-    internal val green = 0xfa
-    internal val blue = 0xfa
+    private val red = 0xfa
+    private val green = 0xfa
+    private val blue = 0xfa
 
-    internal var scaleX = 1f
+    private var scaleX = 1f
 
     fun findBoardCenter(bitmap: Bitmap, startCenterPoint: Point): Point? {
         val width = bitmap.width
@@ -32,7 +32,8 @@ object BoardCenterFinder {
                         Math.abs(newColor.blue - blue) <= 5) {
 
                     val endCenter = findWhiteCenter(bitmap, w, h, startCenterPoint) ?: return null
-                    if (startCenterPoint.x > bitmap.width / 2) {//在右边,所以如果找到的点也在右边就丢掉
+                    if (startCenterPoint.x > bitmap.width / 2) {
+                        //在右边,所以如果找到的点也在右边就丢掉
                         if (endCenter.x > startCenterPoint.x) {
                             return Point(0, -1)
                         }
@@ -46,11 +47,10 @@ object BoardCenterFinder {
             }
             h++
         }
-        return Point((centerX * scaleX).toInt(), (centerY - 1).toInt())
+        return Point((centerX * scaleX).toInt(), (centerY - 1))
     }
 
-    internal fun findWhiteCenter(bitmap: Bitmap, x: Int, y: Int, startCenterPoint: Point): Point? {
-        val minX = x
+    private fun findWhiteCenter(bitmap: Bitmap, x: Int, y: Int, startCenterPoint: Point): Point? {
         var maxX = x
         var maxY = y
         for (w in x until bitmap.width) {
@@ -80,7 +80,7 @@ object BoardCenterFinder {
         val centerY = y + (maxY - y) / 2
         return if (maxY - y < 18) {
             null
-        } else Point((maxX * scaleX).toInt(), centerY.toInt())
+        } else Point((maxX * scaleX).toInt(), centerY)
     }
 }
 

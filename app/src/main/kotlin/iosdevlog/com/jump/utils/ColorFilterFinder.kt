@@ -13,8 +13,8 @@ import iosdevlog.com.jump.utils.Utils
 
 // 直接根据色差来定位下一个中心点
 object ColorFilterFinder {
-    var TAG = ColorFilterFinder.javaClass.simpleName
-    private var bgColor: JumpColor = JumpColor(255, 0, 0, 1)
+    private var TAG = ColorFilterFinder.javaClass.simpleName
+    private var bgColor: JumpColor = JumpColor(255, 0, 0, 255)
 
     private var startCenterPoint: Point = Point(0, 0)
 
@@ -41,9 +41,9 @@ object ColorFilterFinder {
                 val newColor = Utils.intToJumpColor(bitmap.getPixel(x, y))
                 if ((Math.abs(newColor.red - lastColor.red)
                         + Math.abs(newColor.blue - lastColor.blue)
-                        + Math.abs(newColor.green - lastColor.green))*255 >= 20 || (Math.abs(newColor.red - lastColor.red) >= 15
-                        || Math.abs(newColor.blue - lastColor.blue)*255 >= 15
-                        || Math.abs(newColor.green - lastColor.green)*255 >= 15)) {
+                        + Math.abs(newColor.green - lastColor.green)) >= 20 || (Math.abs(newColor.red - lastColor.red) >= 15
+                        || Math.abs(newColor.blue - lastColor.blue) >= 15
+                        || Math.abs(newColor.green - lastColor.green) >= 15)) {
                     Log.e(TAG, "y = " + y + " x = " + x)
                     tmpStartCenterPoint = findStartCenterPoint(bitmap, x, y)
                     Log.e(TAG, tmpStartCenterPoint.toString())

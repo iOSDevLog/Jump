@@ -3,6 +3,8 @@
     <string name="action_share">分享</string>>
     <string name="services_on">辅助服务已开启</string>
     <string name="services_off">辅助服务已关闭</string>
-    <string name="information">官方网站: http://iosdevlog.com\n源码:http://github.com/iOSDevLog/Jump</string>
+    <string name="information">微信跳一跳插件v1.0\n\n需要 root，http://iosdevlog.com才能运行。\n手机root:https://zh.kingoapp.com\n\n游戏中也可以返回这里。\n可以拖动滚动条设置 时间/距离 的比例。\n官方网站: http://iosdevlog.com\n源码:http://github.com/iOSDevLog/Jump</string>
     <string name="ratio">系数</string>
+    <string name="default_ratio">1.37</string>
+    <string name="plugin_description">跳一跳 插件，开启后，进入微信小程序界面，就可以自动跳了。\n\n官方网站: http://iosdevlog.com\n源码:http://github.com/iOSDevLog/Jump\n\n简书：https://www.jianshu.com/u/1577b98c62f4\n\n微博、微信公众号、Twitter：iOSDevLog</string>
 </resources>
